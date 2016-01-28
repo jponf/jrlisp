@@ -9,13 +9,14 @@ public final class ConsCell implements SExpression {
 
     public ConsCell(SExpression car, SExpression cdr) {
         assert car != null;
+        assert cdr != null;
         this.car = car;
         this.cdr = cdr;
     }
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return this;
     }
 
     @Override
@@ -26,16 +27,24 @@ public final class ConsCell implements SExpression {
             return false;
 
         ConsCell obj = (ConsCell) o;  // car cannot be null, cdr can
-        return car.equals(obj.car) && (cdr != null ? cdr.equals(obj.cdr) : obj.cdr == null);
+        return car.equals(obj.car) && cdr.equals(obj.cdr);
     }
 
     @Override
     public int hashCode() {  // Auto-generated
-        return 31 * car.hashCode() + (cdr != null ? cdr.hashCode() : 0);
+        return 31 * car.hashCode() + cdr.hashCode();
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yed.");
+        StringBuilder buffer = new StringBuilder(this.car.toString());
+
+        SExpression currentCDR = ListOps.cdr(this);
+        while (!Symbol.NIL.equals(currentCDR)) {
+            buffer.append(" ").append(ListOps.car(currentCDR));
+            currentCDR = ListOps.cdr(currentCDR);
+        }
+
+        return String.format("(%s)", buffer.toString());
     }
 }

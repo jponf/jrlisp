@@ -34,7 +34,15 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        int len = 0;
+
+        SExpression currentExpr = sexpr;
+        while (!Symbol.NIL.equals(currentExpr)) {
+            len += 1;
+            currentExpr = cdr(currentExpr);
+        }
+
+        return len;
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
