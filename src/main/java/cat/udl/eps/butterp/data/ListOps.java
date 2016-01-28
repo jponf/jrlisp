@@ -1,27 +1,36 @@
 package cat.udl.eps.butterp.data;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ListOps {
 
     public static SExpression cons(SExpression car, SExpression cdr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return new ConsCell(car, cdr);
     }
 
     public static SExpression car(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return ((ConsCell)sexpr).car;
     }
 
     public static SExpression cdr(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return ((ConsCell)sexpr).cdr;
     }
 
     public static SExpression list(SExpression... elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return ListOps.list(Arrays.asList(elems));
     }
 
     public static SExpression list(List<SExpression> elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+        SExpression head = Symbol.NIL;
+
+        ListIterator<SExpression> it = elems.listIterator(elems.size());
+        while (it.hasPrevious()) {
+            head = ListOps.cons(it.previous(), head);
+        }
+
+        return head;
     }
 
     public static int length(SExpression sexpr) {

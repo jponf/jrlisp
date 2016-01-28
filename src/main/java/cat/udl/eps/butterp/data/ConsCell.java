@@ -2,13 +2,15 @@ package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
 
-public class ConsCell implements SExpression {
+public final class ConsCell implements SExpression {
 
-    public final SExpression car; // Si el definiu privat caldrà un getter
-    public final SExpression cdr; // Si el definiu privat caldrà un getter
+    public final SExpression car;
+    public final SExpression cdr;
 
     public ConsCell(SExpression car, SExpression cdr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        assert car != null;
+        this.car = car;
+        this.cdr = cdr;
     }
 
     @Override
@@ -17,17 +19,23 @@ public class ConsCell implements SExpression {
     }
 
     @Override
-    public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+    public boolean equals(Object o) {  // Auto-generated
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        ConsCell obj = (ConsCell) o;  // car cannot be null, cdr can
+        return car.equals(obj.car) && (cdr != null ? cdr.equals(obj.cdr) : obj.cdr == null);
     }
 
     @Override
-    public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+    public int hashCode() {  // Auto-generated
+        return 31 * car.hashCode() + (cdr != null ? cdr.hashCode() : 0);
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        throw new UnsupportedOperationException("not implemented yed.");
     }
 }
