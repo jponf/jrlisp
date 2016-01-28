@@ -2,12 +2,12 @@ package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
 
-public class Integer implements SExpression {
+public final class Integer implements SExpression {
 
-    public final int value; // Si el definiu privat caldrà un getter
+    public final int value;  // Si el definiu privat caldrà un getter
 
     public Integer(int value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.value = value;
     }
 
     @Override
@@ -17,16 +17,16 @@ public class Integer implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return  o instanceof Integer && ((Integer)o).value == value;
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return value;  // Since the return is an int, we can use its actual value.
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return String.valueOf(value);
     }
 }
