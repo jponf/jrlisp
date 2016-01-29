@@ -48,6 +48,7 @@ public class Primitives {
         loadPrimitiveArithmeticFunctions(env);
         loadPrimitiveListFunctions(env);
         loadPrimitiveComparisonFunctions(env);
+        loadPrimitiveEvalAndApplyFunctions(env);
     }
 
     /**
@@ -92,11 +93,9 @@ public class Primitives {
         env.bindGlobal(new Symbol("car"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                int nargs = ListOps.length(evargs);
-                if (nargs != 1)
-                    throw new EvaluationError(String.format("car: expected 1 arguments, %d given", nargs));
-                else if (ConsCell.class != ListOps.car(evargs).getClass())
-                    throw new EvaluationError("car: the given argument is not a list");
+                checkExactNumberOfArguments("car", 1, evargs);
+                if (ConsCell.class != ListOps.car(evargs).getClass())
+                    throw new EvaluationError("cdr: the given argument is not a list");
 
                 return ListOps.car(ListOps.car(evargs));
             }
@@ -105,11 +104,9 @@ public class Primitives {
         env.bindGlobal(new Symbol("cdr"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                int nargs = ListOps.length(evargs);
-                if (nargs != 1)
-                    throw new EvaluationError(String.format("car: expected 1 arguments, %d given", nargs));
-                else if (ConsCell.class != ListOps.car(evargs).getClass())
-                    throw new EvaluationError("car: the given argument is not a list");
+                checkExactNumberOfArguments("cdr", 1, evargs);
+                if (ConsCell.class != ListOps.car(evargs).getClass())
+                    throw new EvaluationError("cdr: the given argument is not a list");
 
                 return ListOps.cdr(ListOps.car(evargs));
             }
@@ -118,9 +115,7 @@ public class Primitives {
         env.bindGlobal(new Symbol("cons"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {  // TODO: Simplify
-                int nargs = ListOps.length(evargs);
-                if (nargs != 2)
-                    throw new EvaluationError(String.format("cons: expected 2 arguments, %d given", nargs));
+                checkExactNumberOfArguments("cons", 2, evargs);
 
                 SExpression firstArg = ListOps.nth(evargs, 0);
                 SExpression secondArg = ListOps.nth(evargs, 1);
@@ -150,11 +145,28 @@ public class Primitives {
         env.bindGlobal(new Symbol("eq"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                int nargs = ListOps.length(evargs);
-                if (nargs != 2)
-                    throw new EvaluationError(String.format("cons: expected 2 arguments, %d given", nargs));
-
+                checkExactNumberOfArguments("eq", 2, evargs);
                 return ListOps.nth(evargs, 0).equals(ListOps.nth(evargs, 1)) ? Symbol.TRUE : Symbol.NIL;
+            }
+        });
+    }
+
+    /**
+     * Adds the functions: eval and appy
+     */
+    private static void loadPrimitiveEvalAndApplyFunctions(Environment env) {
+        env.bindGlobal(new Symbol("eval"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                int nargs = ListOps.length(evargs);
+                return null;
+            }
+        });
+
+        env.bindGlobal(new Symbol("apply"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                throw new UnsupportedOperationException("not implemented yet");
             }
         });
     }
@@ -170,12 +182,25 @@ public class Primitives {
         env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
             public SExpression applySpecial(SExpression args, Environment env) {
-                int nargs = ListOps.length(args);
-                if (nargs != 1)
-                    throw new EvaluationError(String.format("quote: expected 1 argument, received %d", nargs));
-
+                checkExactNumberOfArguments("quote", 1, args);
                 return ListOps.car(args);
             }
         });
+    }
+
+
+    /**
+     * Utility method that checks if the number of arguments is the expected one.
+     * @param symbolName Name of the function/special that is being evaluated.
+     * @param expectedArgs Number of expected arguments.
+     * @param args List of function/special arguments.
+     * @throws EvaluationError If the number of arguments does not match the expected amount.
+     */
+    private static void checkExactNumberOfArguments(String symbolName, int expectedArgs, SExpression args) {
+        int nargs = ListOps.length(args);
+        if (nargs != expectedArgs)
+            throw new EvaluationError(
+                    String.format("%s: expected %d argument(s), received %d", symbolName, expectedArgs, nargs)
+            );
     }
 }
