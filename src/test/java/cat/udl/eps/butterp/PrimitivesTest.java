@@ -116,6 +116,11 @@ public class PrimitivesTest {
         assertEvalFails("(cdr 1)");
     }
 
+    @Test
+    public void cdr_empty() {
+        assertEvalTo("(cdr (quote (1)))", "nil");
+    }
+
     @Test(expected = EvaluationError.class)
     public void cons_no_args() {
         assertEvalFails("(cons)");
