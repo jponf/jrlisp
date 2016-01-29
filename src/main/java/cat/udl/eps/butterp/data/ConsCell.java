@@ -29,7 +29,7 @@ public final class ConsCell implements SExpression {
         }
 
         throw new EvaluationError(
-                String.format("Trying to evaluate %s, which is not a function nor a special", symValue.toString()));
+                String.format("Error evaluating %s, which is nor a function nor a special", symValue.toString()));
     }
 
     private SExpression evaluateFunction(Function function, Environment env) {
