@@ -147,7 +147,16 @@ public class Primitives {
      * Adds the functions: eq
      */
     private static void loadPrimitiveComparisonFunctions(Environment env) {
+        env.bindGlobal(new Symbol("eq"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                int nargs = ListOps.length(evargs);
+                if (nargs != 2)
+                    throw new EvaluationError(String.format("cons: expected 2 arguments, %d given", nargs));
 
+                return ListOps.nth(evargs, 0).equals(ListOps.nth(evargs, 1)) ? Symbol.TRUE : Symbol.NIL;
+            }
+        });
     }
 
 
