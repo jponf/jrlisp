@@ -200,6 +200,17 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("if"), new Special() {
+            @Override
+            public SExpression applySpecial(SExpression args, Environment env) {
+                checkExactNumberOfArguments("if", 3, args);
+
+                if (Symbol.NIL.equals(ListOps.nth(args, 0).eval(env)))  // evaluate condition
+                    return ListOps.nth(args, 2).eval(env);              // evaluate else expression
+                return ListOps.nth(args, 1).eval(env);                  // evaluate then expression
+            }
+        });
+
         env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
             public SExpression applySpecial(SExpression args, Environment env) {
