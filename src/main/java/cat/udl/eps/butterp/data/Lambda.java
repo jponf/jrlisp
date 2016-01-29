@@ -7,7 +7,6 @@ import java.util.Iterator;
 public class Lambda extends Function {
 
     private SExpression params;
-    private int numParams;
     private SExpression body;
     private Environment definitionEnv;
 

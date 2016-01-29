@@ -44,12 +44,10 @@ public final class ConsCell implements SExpression {
 
     @Override
     public boolean equals(Object o) {  // Auto-generated
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
-        ConsCell obj = (ConsCell) o;  // car cannot be null, cdr can
+        ConsCell obj = (ConsCell) o;
         return car.equals(obj.car) && cdr.equals(obj.cdr);
     }
 
