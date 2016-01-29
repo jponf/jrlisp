@@ -1,6 +1,7 @@
 package cat.udl.eps.butterp.data;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -46,11 +47,41 @@ public class ListOps {
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (n <= 0) {  // Avoid infinite recursion warning (when  == 0)
+            return ListOps.car(sexpr);
+        }
+        return nth(ListOps.car(sexpr), n - 1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (!(params instanceof ConsCell))
+            return false;
+
+        boolean ok = true;
+        SExpression it = params;
+        while (!Symbol.NIL.equals(it) && ok) {
+            ok = klass.isInstance(ListOps.car(it));
+            it = ListOps.cdr(it);
+        }
+
+        return ok;
     }
 
+    public static Iterator<SExpression> createIterator(final SExpression sexpr) {
+        return new Iterator<SExpression>() {
+            SExpression index = sexpr;
+
+            @Override
+            public boolean hasNext() {
+                return !Symbol.NIL.equals(index);
+            }
+
+            @Override
+            public SExpression next() {
+                SExpression retVal = ListOps.car(index);
+                index = ListOps.cdr(index);
+                return retVal;
+            }
+        };
+    }
 }

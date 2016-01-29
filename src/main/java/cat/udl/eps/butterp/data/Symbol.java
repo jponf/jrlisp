@@ -15,7 +15,7 @@ public final class Symbol implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return env.find(this);
     }
 
     @Override
