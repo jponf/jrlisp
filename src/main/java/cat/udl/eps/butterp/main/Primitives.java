@@ -50,7 +50,7 @@ public class Primitives {
     }
 
     /**
-     * Loads all the primitive arithmetic functions.
+     * Loads all the arithmetic primitive functions.
      */
     private static void loadPrimitiveArithmeticFunctions(Environment env) {
         env.bindGlobal(new Symbol("add"), new Function() {
@@ -85,6 +85,9 @@ public class Primitives {
     }
 
 
+    /**
+     * Loads all the list's primitive functions.
+     */
     private static void loadPrimitiveListFunctions(Environment env) {
         env.bindGlobal(new Symbol("car"), new Function() {
             @Override
@@ -114,12 +117,21 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("cons"), new Function() {
             @Override
-            public SExpression apply(SExpression evargs, Environment env) {
+            public SExpression apply(SExpression evargs, Environment env) {  // TODO: Simplify
                 int nargs = ListOps.length(evargs);
                 if (nargs != 2)
-                    throw new EvaluationError(String.format("const: expected 2 arguments, %d given", nargs));
+                    throw new EvaluationError(String.format("cons: expected 2 arguments, %d given", nargs));
 
-                return ListOps.list(ListOps.nth(evargs, 0), ListOps.nth(evargs, 1));
+                SExpression firstArg = ListOps.nth(evargs, 0);
+                SExpression secondArg = ListOps.nth(evargs, 1);
+
+                if (Symbol.NIL.equals(secondArg)) {
+                    return ListOps.list(firstArg);
+                } else if (secondArg instanceof ConsCell) {
+                    return new ConsCell(ListOps.nth(evargs, 0), secondArg);
+                }
+
+                throw new EvaluationError("cons: the second argument must be either nil or a list");
             }
         });
     }

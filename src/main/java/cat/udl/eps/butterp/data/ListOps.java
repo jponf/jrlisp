@@ -50,7 +50,7 @@ public class ListOps {
         if (n <= 0) {  // Avoid infinite recursion warning (when  == 0)
             return ListOps.car(sexpr);
         }
-        return nth(ListOps.car(sexpr), n - 1);
+        return nth(ListOps.cdr(sexpr), n - 1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
