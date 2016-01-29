@@ -152,21 +152,28 @@ public class Primitives {
     }
 
     /**
-     * Adds the functions: eval and appy
+     * Adds the functions: eval and apply
      */
     private static void loadPrimitiveEvalAndApplyFunctions(Environment env) {
         env.bindGlobal(new Symbol("eval"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                int nargs = ListOps.length(evargs);
-                return null;
+                checkExactNumberOfArguments("eval", 1, evargs);
+                return ListOps.car(evargs).eval(env);
             }
         });
 
         env.bindGlobal(new Symbol("apply"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
+                checkExactNumberOfArguments("apply", 2, evargs);
+
+                SExpression fun = ListOps.nth(evargs, 0);
+                SExpression args = ListOps.nth(evargs, 1);
+                if (fun instanceof Function)
+                    return ((Function)fun).apply(args, env);
+
+                throw new EvaluationError("apply: first argument is not a function");
             }
         });
     }
