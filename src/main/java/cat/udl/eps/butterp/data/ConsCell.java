@@ -60,10 +60,9 @@ public final class ConsCell implements SExpression {
     public String toString() {
         StringBuilder buffer = new StringBuilder(this.car.toString());
 
-        SExpression currentCDR = cdr;
-        while (!Symbol.NIL.equals(currentCDR)) {
-            buffer.append(" ").append(ListOps.car(currentCDR));
-            currentCDR = ListOps.cdr(currentCDR);
+        Iterator<SExpression> it = ListOps.createIterator(cdr);
+        while (it.hasNext()) {
+            buffer.append(" ").append(it.next());
         }
 
         return String.format("(%s)", buffer.toString());
