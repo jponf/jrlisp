@@ -3,7 +3,6 @@ package cat.udl.eps.butterp.main;
 import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.environment.Environment;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 public class Primitives {
 
@@ -13,32 +12,6 @@ public class Primitives {
 
         loadPrimitiveFunctions(env);
         loadPrimitiveSpecials(env);
-
-        /*
-
-        An example of a predefined Function:
-
-        env.bindGlobal(new Symbol("function"), new Function() {
-            @Override
-            public SExpression apply(SExpression evargs, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
-            }
-        });
-
-        */
-
-        /*
-
-        An example of a predefined Special:
-
-        env.bindGlobal(new Symbol("special"), new Special() {
-            @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
-            }
-        });
-
-        */
     }
 
     /**
