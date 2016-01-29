@@ -47,10 +47,11 @@ public class Primitives {
     private static void loadPrimitiveFunctions(Environment env) {
         loadPrimitiveArithmeticFunctions(env);
         loadPrimitiveListFunctions(env);
+        loadPrimitiveComparisonFunctions(env);
     }
 
     /**
-     * Loads all the arithmetic primitive functions.
+     * Adds the functions: add and mult
      */
     private static void loadPrimitiveArithmeticFunctions(Environment env) {
         env.bindGlobal(new Symbol("add"), new Function() {
@@ -84,9 +85,8 @@ public class Primitives {
         });
     }
 
-
     /**
-     * Loads all the list's primitive functions.
+     * Adds the functions: car, cdr, cons and list
      */
     private static void loadPrimitiveListFunctions(Environment env) {
         env.bindGlobal(new Symbol("car"), new Function() {
@@ -134,6 +134,20 @@ public class Primitives {
                 throw new EvaluationError("cons: the second argument must be either nil or a list");
             }
         });
+
+        env.bindGlobal(new Symbol("list"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                return evargs;
+            }
+        });
+    }
+
+    /**
+     * Adds the functions: eq
+     */
+    private static void loadPrimitiveComparisonFunctions(Environment env) {
+
     }
 
 
