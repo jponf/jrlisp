@@ -3,6 +3,7 @@ package cat.udl.eps.butterp.main;
 import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.environment.Environment;
+import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 public class Primitives {
 
@@ -184,7 +185,20 @@ public class Primitives {
      * @param env The environment that will hold the newly defined specials.
      */
     private static void loadPrimitiveSpecials(Environment env) {
-        // The declarations is made in alphabetical order
+        env.bindGlobal(new Symbol("define"), new Special() {
+            @Override
+            public SExpression applySpecial(SExpression args, Environment env) {
+                checkExactNumberOfArguments("define", 2, args);
+
+                SExpression sym = ListOps.nth(args, 0);
+                SExpression expr = ListOps.nth(args, 1);
+                if (!(sym instanceof Symbol))
+                    throw new EvaluationError("define: first argument must be a symbol");
+
+                env.bindGlobal((Symbol)sym, expr.eval(env));
+                return Symbol.NIL;
+            }
+        });
 
         env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
@@ -193,6 +207,8 @@ public class Primitives {
                 return ListOps.car(args);
             }
         });
+
+
     }
 
 
