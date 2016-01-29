@@ -57,30 +57,30 @@ public class Primitives {
         env.bindGlobal(new Symbol("add"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                if (ListOps.isListOf(evargs, Integer.class)) {
-                    int sum = 0;
-                    for (int i = 0; i < ListOps.length(evargs); ++i) {
-                        sum += ((Integer)ListOps.nth(evargs, i)).value;
-                    }
-                    return new Integer(sum);
-                }
+                int nargs = ListOps.length(evargs);
+                if (nargs > 0 && !ListOps.isListOf(evargs, Integer.class))
+                    throw new EvaluationError("add: Invalid argument(s) type");
 
-                throw new EvaluationError("Invalid add arguments");
+                int sum = 0;
+                for (int i = 0; i < nargs; ++i) {
+                    sum += ((Integer)ListOps.nth(evargs, i)).value;
+                }
+                return new Integer(sum);
             }
         });
 
         env.bindGlobal(new Symbol("mult"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                if (ListOps.isListOf(evargs, Integer.class)) {
-                    int mult = 1;
-                    for (int i = 0; i < ListOps.length(evargs); ++i) {
-                        mult *= ((Integer)ListOps.nth(evargs, i)).value;
-                    }
-                    return new Integer(mult);
-                }
+                int nargs = ListOps.length(evargs);
+                if (nargs > 0 && !ListOps.isListOf(evargs, Integer.class))
+                    throw new EvaluationError("mult: Invalid argument(s) type");
 
-                throw new EvaluationError("Invalid mult arguments");
+                int mult = 1;
+                for (int i = 0; i < nargs; ++i) {
+                    mult *= ((Integer)ListOps.nth(evargs, i)).value;
+                }
+                return new Integer(mult);
             }
         });
     }
