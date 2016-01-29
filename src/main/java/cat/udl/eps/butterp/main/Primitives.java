@@ -211,6 +211,21 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("lambda"), new Special() {
+            @Override
+            public SExpression applySpecial(SExpression args, Environment env) {
+                checkExactNumberOfArguments("lambda", 2, args);
+
+                SExpression params = ListOps.nth(args, 0);
+                SExpression body = ListOps.nth(args, 1);
+
+                if (!ListOps.isListOf(params, Symbol.class))
+                    throw new EvaluationError("lambda: the first argument must be a list of symbols");
+
+                return new Lambda(params, body, env);
+            }
+        });
+
         env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
             public SExpression applySpecial(SExpression args, Environment env) {
@@ -221,7 +236,6 @@ public class Primitives {
 
 
     }
-
 
     /**
      * Utility method that checks if the number of arguments is the expected one.
