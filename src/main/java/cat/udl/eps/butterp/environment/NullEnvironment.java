@@ -9,7 +9,7 @@ import cat.udl.eps.butterp.data.Symbol;
  * Null pattern applied to evaluation environments.
  *
  * If no parent environment is defined, it must automatically be NullEnvironment, which
- * always fails on find and its globalBind refers to its child bind.
+ * always fails on find(...) and its globalBind(...) refers to its child bind(...).
  */
 public final class NullEnvironment implements Environment {
 
