@@ -38,6 +38,6 @@ public class Lambda extends Function {
 
     @Override
     public String toString() {
-        return String.format("<lambda-function-%x>", hashCode());
+        return String.format("<lambda-function-%x | parameters: %s>", hashCode(), params.toString());
     }
 }
