@@ -115,17 +115,13 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("cons"), new Function() {
             @Override
-            public SExpression apply(SExpression evargs, Environment env) {  // TODO: Simplify
+            public SExpression apply(SExpression evargs, Environment env) {
                 checkExactNumberOfArguments("cons", 2, evargs);
 
                 SExpression firstArg = ListOps.nth(evargs, 0);
                 SExpression secondArg = ListOps.nth(evargs, 1);
-
-                if (Symbol.NIL.equals(secondArg)) {
-                    return ListOps.list(firstArg);
-                } else if (secondArg instanceof ConsCell) {
-                    return new ConsCell(ListOps.nth(evargs, 0), secondArg);
-                }
+                if (Symbol.NIL.equals(secondArg) || secondArg instanceof ConsCell)
+                    return new ConsCell(firstArg, secondArg);
 
                 throw new EvaluationError("cons: the second argument must be either nil or a list");
             }
