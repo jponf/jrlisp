@@ -33,6 +33,9 @@ public class Lambda extends Function {
             localEnvironment.bind((Symbol)paramsIt.next(), argsIt.next());
         }
 
+        if (argsIt.hasNext() || paramsIt.hasNext())
+            throw new EvaluationError(String.format("%s: not enought arguments provided", toString()));
+
         return body.eval(localEnvironment);
     }
 
