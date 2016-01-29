@@ -47,24 +47,12 @@ public class ListOps {
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-        if (n <= 0) {  // Avoid infinite recursion warning (when  == 0)
-            return ListOps.car(sexpr);
-        }
-        return nth(ListOps.cdr(sexpr), n - 1);
+        return n <= 0 ? ListOps.car(sexpr) : nth(ListOps.cdr(sexpr), n - 1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
-        if (!(params instanceof ConsCell))
-            return false;
-
-        boolean ok = true;
-        SExpression it = params;
-        while (!Symbol.NIL.equals(it) && ok) {
-            ok = klass.isInstance(ListOps.car(it));
-            it = ListOps.cdr(it);
-        }
-
-        return ok;
+        return Symbol.NIL.equals(params) ||
+              (klass.isInstance(ListOps.car(params)) && isListOf(ListOps.cdr(params), klass));
     }
 
     public static Iterator<SExpression> createIterator(final SExpression sexpr) {
