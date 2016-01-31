@@ -5,7 +5,6 @@ import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.data.BaseNumber;
 import cat.udl.eps.butterp.environment.Environment;
 
-import java.util.List;
 
 public class Primitives {
 
