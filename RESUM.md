@@ -1,17 +1,17 @@
 Resum del projecte:
 ===================
 
-* Nom:
-* Adreça de correu:
+* Nom: Josep Pon Farreny
+* Adreça de correu: jpf2@alumnes.udl.cat
 
-* Nom:
-* Adreça de correu:
+* Nom: Marc Piñol Pueyo
+* Adreça de correu: mpp5@alumnes.udl.cat
 
 Categoria:
 ----------
 
 [ ] Primer, segon i tercer
-[ ] Quart i màster
+[x] Quart i màster
 
 (marqueu amb una [x] el que correspongui)
 
