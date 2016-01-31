@@ -1,9 +1,7 @@
 package cat.udl.eps.butterp;
 
+import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
-import cat.udl.eps.butterp.data.ListOps;
-import cat.udl.eps.butterp.data.SExpression;
-import cat.udl.eps.butterp.data.Symbol;
 import cat.udl.eps.butterp.reader.Parser;
 import org.junit.Test;
 
@@ -13,6 +11,7 @@ public class ParserTest {
 
     public static final SExpression SYMBOL = new Symbol("SYMBOL");
     public static final SExpression INTEGER = new Integer(1234);
+    public static final SExpression REAL = new Real(12.34);
     public static final SExpression QUOTE = new Symbol("quote");
 
     @Test
@@ -25,6 +24,18 @@ public class ParserTest {
     public void read_one_integer_with_spaces() {
         SExpression sexpr = Parser.parse("   1234");
         assertEquals(INTEGER, sexpr);
+    }
+
+    @Test
+    public void read_one_real() {
+        SExpression sexpr = Parser.parse("12.34"); // both are constructed equally, thereby
+        assertEquals(REAL, sexpr);                 // they should share the same rounding error
+    }
+
+    @Test
+    public void read_one_real_with_spaces() {
+        SExpression sexpr = Parser.parse("   12.34");
+        assertEquals(REAL, sexpr);
     }
 
     @Test

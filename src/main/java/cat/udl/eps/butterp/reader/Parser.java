@@ -1,9 +1,7 @@
 package cat.udl.eps.butterp.reader;
 
+import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
-import cat.udl.eps.butterp.data.ListOps;
-import cat.udl.eps.butterp.data.SExpression;
-import cat.udl.eps.butterp.data.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +46,16 @@ public class Parser {
         }
     }
 
+    private SExpression real() {
+        if (lookahead.type == Token.Type.REAL) {
+            SExpression sexpr = new Real(Double.parseDouble(lookahead.text));
+            consume();
+            return sexpr;
+        } else {
+            throw new ParserError("expecting " + Token.Type.REAL + "; found " + lookahead);
+        }
+    }
+
     private SExpression integer() {
         if (lookahead.type == Token.Type.INTEGER) {
             SExpression sexpr = new Integer(java.lang.Integer.parseInt(lookahead.text));
@@ -69,17 +77,16 @@ public class Parser {
     }
 
     public SExpression sexpr() {
-        if (lookahead.type == Token.Type.ATOM) {
-            return atom();
-        } else if (lookahead.type == Token.Type.INTEGER) {
-            return integer();
-        } else if (lookahead.type == Token.Type.LPAREN) {
-            return list();
-        } else if (lookahead.type == Token.Type.QUOTE) {
-            consume();
-            return ListOps.list(new Symbol("quote"), sexpr());
-        } else {
-            throw new ParserError("expecting atom, integer or list, found " + lookahead);
+        switch (lookahead.type) {
+            case ATOM:    return atom();
+            case REAL:    return real();
+            case INTEGER: return integer();
+            case LPAREN:  return list();
+            case QUOTE:
+                consume();
+                return ListOps.list(new Symbol("quote"), sexpr());
+            default:
+                throw new ParserError("expecting atom, integer or list, found " + lookahead);
         }
     }
 

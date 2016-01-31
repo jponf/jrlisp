@@ -31,6 +31,10 @@ public abstract class Lexer {
         return isSIGN() || isDIGIT();
     }
 
+    private boolean isFULLSTOP() {
+        return c == '.';
+    }
+
     private boolean isDIGIT() {
         return c >= '0' && c <= '9';
     }
@@ -84,8 +88,14 @@ public abstract class Lexer {
 
     private Token INTEGER() {
         StringBuilder buf = new StringBuilder();
+        boolean decimal = false;
 
         if (isSIGN()) {
+            buf.append(c);
+            consume();
+        }
+        if (isFULLSTOP()) {
+            decimal = true;
             buf.append(c);
             consume();
         }
@@ -94,12 +104,14 @@ public abstract class Lexer {
         }
 
         do {
+            if (isFULLSTOP())
+                decimal = true;
             buf.append(c);
             consume();
-        } while (isDIGIT());
+        } while (isDIGIT() || (isFULLSTOP() && !decimal));
 
         if (c == EOF || c == ')' || isWS()) {
-            return Token.INTEGER(buf.toString());
+            return decimal ? Token.REAL(buf.toString()) : Token.INTEGER(buf.toString());
         } else {
             throw new LexerError(invalidCharacter(c));
         }
