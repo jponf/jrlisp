@@ -258,8 +258,13 @@ public class PrimitivesTest {
     }
 
     @Test
-    public void add_many_args() {
+    public void add_many_integers() {
         assertEvalTo("(add 1 2 3 4)", "10");
+    }
+
+    @Test
+    public void add_many_real() {  // TODO adapt test to use delta threshold
+        assertEvalTo("(add 1 2 3.5 4.3)", "10.8");
     }
 
     @Test(expected = EvaluationError.class)
