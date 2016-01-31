@@ -3,7 +3,7 @@ package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
 
-public final class Real implements SExpression {
+public final class Real implements BaseNumber {
 
     public double value;
 
@@ -15,6 +15,14 @@ public final class Real implements SExpression {
     public SExpression eval(Environment env) {
         return this;
     }
+
+    @Override public BaseNumber add(BaseNumber operand) { return operand.add(this); }
+    @Override public BaseNumber add(Integer operand)    { return new Real(value + operand.value); }
+    @Override public BaseNumber add(Real operand)       { return new Real(value + operand.value); }
+
+    @Override public BaseNumber multiply(BaseNumber operand) { return operand.multiply(this); }
+    @Override public BaseNumber multiply(Integer operand)    { return new Real(value * operand.value); }
+    @Override public BaseNumber multiply(Real operand)       { return new Real(value * operand.value); }
 
     @Override
     public boolean equals(Object o) {

@@ -2,7 +2,7 @@ package cat.udl.eps.butterp.data;
 
 import cat.udl.eps.butterp.environment.Environment;
 
-public final class Integer implements SExpression {
+public final class Integer implements BaseNumber {
 
     public final int value;  // Si el definiu privat caldrà un getter
 
@@ -14,6 +14,14 @@ public final class Integer implements SExpression {
     public SExpression eval(Environment env) {
         return this;
     }
+
+    @Override public BaseNumber add(BaseNumber operand) { return operand.add(this); }
+    @Override public BaseNumber add(Integer operand)    { return new Integer(value + operand.value); }
+    @Override public BaseNumber add(Real operand)       { return new Real(value + operand.value); }
+
+    @Override public BaseNumber multiply(BaseNumber operand) { return operand.multiply(this); }
+    @Override public BaseNumber multiply(Integer operand)    { return new Integer(value * operand.value); }
+    @Override public BaseNumber multiply(Real operand)       { return new Real(value * operand.value); }
 
     @Override
     public boolean equals(Object o) {
