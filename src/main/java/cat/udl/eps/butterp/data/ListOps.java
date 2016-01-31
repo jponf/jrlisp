@@ -35,7 +35,7 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
-        if (!Symbol.NIL.equals(sexpr))
+        if (Symbol.NIL.equals(sexpr))
             return 0;
 
         return 1 + length(cdr(sexpr));
