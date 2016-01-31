@@ -35,15 +35,10 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
-        int len = 0;
+        if (!Symbol.NIL.equals(sexpr))
+            return 0;
 
-        SExpression currentExpr = sexpr;
-        while (!Symbol.NIL.equals(currentExpr)) {
-            len += 1;
-            currentExpr = cdr(currentExpr);
-        }
-
-        return len;
+        return 1 + length(cdr(sexpr));
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
