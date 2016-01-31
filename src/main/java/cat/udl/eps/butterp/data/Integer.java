@@ -15,13 +15,17 @@ public final class Integer implements BaseNumber {
         return this;
     }
 
-    @Override public BaseNumber add(BaseNumber operand) { return operand.add(this); }
-    @Override public BaseNumber add(Integer operand)    { return new Integer(value + operand.value); }
-    @Override public BaseNumber add(Real operand)       { return new Real(value + operand.value); }
+    @Override public BaseNumber add(BaseNumber operand) { return operand.addTo(this); }
+    @Override public BaseNumber addTo(Integer operand)    { return new Integer(operand.value + value); }
+    @Override public BaseNumber addTo(Real operand)       { return new Real(operand.value + value); }
 
-    @Override public BaseNumber multiply(BaseNumber operand) { return operand.multiply(this); }
-    @Override public BaseNumber multiply(Integer operand)    { return new Integer(value * operand.value); }
-    @Override public BaseNumber multiply(Real operand)       { return new Real(value * operand.value); }
+    @Override public BaseNumber subtract(BaseNumber operand) { return operand.subtractTo(this); }
+    @Override public BaseNumber subtractTo(Integer operand)  { return new Integer(operand.value - value); }
+    @Override public BaseNumber subtractTo(Real operand)     { return new Real(operand.value - value); }
+
+    @Override public BaseNumber multiply(BaseNumber operand) { return operand.multiplyTo(this); }
+    @Override public BaseNumber multiplyTo(Integer operand)  { return new Integer(operand.value * value); }
+    @Override public BaseNumber multiplyTo(Real operand)     { return new Real(operand.value * value); }
 
     @Override
     public boolean equals(Object o) {

@@ -4,7 +4,8 @@ import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.data.BaseNumber;
 import cat.udl.eps.butterp.environment.Environment;
-import com.sun.xml.internal.rngom.parse.host.Base;
+
+import java.util.List;
 
 public class Primitives {
 
@@ -28,7 +29,7 @@ public class Primitives {
     }
 
     /**
-     * Adds the functions: add and mult
+     * Adds the functions: add, sub and mult
      */
     private static void loadPrimitiveArithmeticFunctions(Environment env) {
         env.bindGlobal(new Symbol("add"), new Function() {
@@ -39,10 +40,25 @@ public class Primitives {
 
                 if (ListOps.car(evargs) instanceof BaseNumber) {
                     BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
-                    return ((BaseNumber) ListOps.car(evargs)).add(nextOperand);
+                    return nextOperand.add((BaseNumber) ListOps.car(evargs));
                 }
 
                 throw new EvaluationError("add: Invalid argument(s) type");
+            }
+        });
+
+        env.bindGlobal(new Symbol("sub"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (Symbol.NIL.equals(evargs))
+                    return new Integer(0);
+
+                if (ListOps.car(evargs) instanceof BaseNumber) {
+                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
+                    return nextOperand.subtract((BaseNumber) ListOps.car(evargs));
+                }
+
+                throw new EvaluationError("sub: Invalid argument(s) type");
             }
         });
 
@@ -54,7 +70,7 @@ public class Primitives {
 
                 if (ListOps.car(evargs) instanceof BaseNumber) {
                     BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
-                    return ((BaseNumber) ListOps.car(evargs)).multiply(nextOperand);
+                    return nextOperand.multiply((BaseNumber) ListOps.car(evargs));
                 }
 
                 throw new EvaluationError("mult: Invalid argument(s) type");
