@@ -5,6 +5,8 @@ import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.data.BaseNumber;
 import cat.udl.eps.butterp.environment.Environment;
 
+import java.util.List;
+
 
 public class Primitives {
 
@@ -75,6 +77,26 @@ public class Primitives {
                 throw new EvaluationError("mult: Invalid argument(s) type");
             }
         });
+
+        env.bindGlobal(new Symbol("div"), new Function() {
+                    @Override
+                    public SExpression apply(SExpression evargs, Environment env) {
+                        try {
+                            if (Symbol.NIL.equals(evargs))
+                                return new Integer(1);
+
+                            if (ListOps.car(evargs) instanceof BaseNumber) {
+                                BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
+                                return ((BaseNumber) ListOps.car(evargs)).divide(nextOperand);
+                            }
+
+                            throw new EvaluationError("div: Invalid argument(s) type");
+                        } catch(ArithmeticException e) {
+                            throw new EvaluationError("div: Division by zero");
+                        }
+                    }
+                }
+        );
     }
 
     /**

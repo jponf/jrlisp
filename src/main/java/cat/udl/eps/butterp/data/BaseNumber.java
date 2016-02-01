@@ -35,4 +35,16 @@ public interface BaseNumber extends SExpression {
 
     BaseNumber multiplyTo(Integer operand);
     BaseNumber multiplyTo(Real operand);
+
+    /**
+     * Performs the division of this number and the given one by dispatching
+     * the appropriate divideTo(...) method.
+     * @param operand The divisor.
+     * @return A new BaseNumber with the result of the operation.
+     * @throws ArithmeticException If the divisor is zero.
+     */
+    BaseNumber divide(BaseNumber operand);
+
+    BaseNumber divideTo(Integer operand);
+    BaseNumber divideTo(Real operand);
 }
