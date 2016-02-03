@@ -15,7 +15,7 @@ public class ReaderLexer extends Lexer {
     @Override
     public void consume() {
         try {
-            c = (char) reader.read();
+            setCurrentCharacter((char) reader.read());
         } catch (IOException e) {
             throw new LexerError(e.getMessage());
         }

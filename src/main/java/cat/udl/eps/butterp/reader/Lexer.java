@@ -6,7 +6,7 @@ public abstract class Lexer {
 
     public static final char EOF = (char) -1; // represent end of file char
 
-    protected char c;                         // current character
+    private char c;                         // current character
 
     public abstract void consume();
 
@@ -65,6 +65,10 @@ public abstract class Lexer {
             }
         }
         return Token.EOF;
+    }
+
+    protected void setCurrentCharacter(char ch) {
+        this.c = ch;
     }
 
     private Token ATOM() {
