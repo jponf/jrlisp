@@ -6,7 +6,7 @@ public abstract class Lexer {
 
     public static final char EOF = (char) -1; // represent end of file char
 
-    protected char c;             // current character
+    protected char c;                         // current character
 
     public abstract void consume();
 
@@ -16,11 +16,11 @@ public abstract class Lexer {
     }
 
     private boolean isALPHA() {
-        return isDIGIT() || isLETTER();
+        return Character.isLetterOrDigit(c);
     }
 
     private boolean isLETTER() {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+        return Character.isLetter(c);
     }
 
     private boolean isSIGN() {
@@ -32,11 +32,11 @@ public abstract class Lexer {
     }
 
     private boolean isDIGIT() {
-        return c >= '0' && c <= '9';
+        return Character.isDigit(c);
     }
 
     private boolean isWS() {
-        return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+        return Character.isWhitespace(c);
     }
 
     public Token nextToken() {
