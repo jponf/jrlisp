@@ -38,6 +38,10 @@ public abstract class Lexer {
         return Character.isDigit(ch);
     }
 
+    private boolean isFullStop() {
+        return ch == '.';
+    }
+
     private boolean isWhitespace() {
         return Character.isWhitespace(ch);
     }
@@ -91,8 +95,14 @@ public abstract class Lexer {
 
     private Token INTEGER() {
         StringBuilder buf = new StringBuilder();
+        boolean decimal = false;
 
         if (isNumberSign()) {
+            buf.append(ch);
+            consume();
+        }
+        if (isFullStop()) {
+            decimal = true;
             buf.append(ch);
             consume();
         }
@@ -101,12 +111,14 @@ public abstract class Lexer {
         }
 
         do {
-            buf.append(ch);
+            if (isFullStop())
+                decimal = true;
+            buf.append(c);
             consume();
-        } while (isDigit());
+        } while (isDigit() || (isFullStop() && !decimal));
 
         if (ch == EOF || ch == ')' || isWhitespace()) {
-            return Token.newInteger(buf.toString());
+            return decimal ? Token.Real(buf.toString()) : Token.newInteger(buf.toString());
         } else {
             throw new LexerError(invalidCharacter(ch));
         }

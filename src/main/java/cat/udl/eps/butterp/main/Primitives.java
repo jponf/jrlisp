@@ -35,14 +35,28 @@ public class Primitives {
                 if (Symbol.NIL.equals(evargs))
                     return new Integer(0);
 
-                if (ListOps.car(evargs) instanceof Integer) {
-                    int sum =  ((Integer)ListOps.car(evargs)).value + ((Integer)apply(ListOps.cdr(evargs), env)).value;
-                    return new Integer(sum);
+                if (ListOps.car(evargs) instanceof BaseNumber) {
+                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
+                    return nextOperand.add((BaseNumber) ListOps.car(evargs));
                 }
 
                 throw new EvaluationError("add: Invalid argument(s) type");
             }
         });
+
+        env.bindGlobal(new Symbol("sub"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (Symbol.NIL.equals(evargs))
+                    return new Integer(0);
+
+                if (ListOps.car(evargs) instanceof BaseNumber) {
+                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
+                    return nextOperand.subtract((BaseNumber) ListOps.car(evargs));
+                }
+
+                throw new EvaluationError("sub: Invalid argument(s) type");
+
 
         env.bindGlobal(new Symbol("mult"), new Function() {
             @Override
@@ -50,14 +64,34 @@ public class Primitives {
                 if (Symbol.NIL.equals(evargs))
                     return new Integer(1);
 
-                if (ListOps.car(evargs) instanceof Integer) {
-                    int sum =  ((Integer)ListOps.car(evargs)).value * ((Integer)apply(ListOps.cdr(evargs), env)).value;
-                    return new Integer(sum);
+                if (ListOps.car(evargs) instanceof BaseNumber) {
+                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
+                    return nextOperand.multiply((BaseNumber) ListOps.car(evargs));
                 }
 
                 throw new EvaluationError("mult: Invalid argument(s) type");
             }
         });
+
+        env.bindGlobal(new Symbol("div"), new Function() {
+                    @Override
+                    public SExpression apply(SExpression evargs, Environment env) {
+                        try {
+                            if (Symbol.NIL.equals(evargs))
+                                return new Integer(1);
+
+                            if (ListOps.car(evargs) instanceof BaseNumber) {
+                                BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
+                                return ((BaseNumber) ListOps.car(evargs)).divide(nextOperand);
+                            }
+
+                            throw new EvaluationError("div: Invalid argument(s) type");
+                        } catch(ArithmeticException e) {
+                            throw new EvaluationError("div: Division by zero");
+                        }
+                    }
+                }
+        );
     }
 
     /**

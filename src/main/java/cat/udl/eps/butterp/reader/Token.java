@@ -6,7 +6,7 @@ package cat.udl.eps.butterp.reader;
 public class Token {
 
     public enum Type {
-        EOF, ATOM, INTEGER, LPAREN, RPAREN, QUOTE
+        EOF, ATOM, REAL, INTEGER, LPAREN, RPAREN, QUOTE
     }
 
     public static final Token EOF    = new Token(Type.EOF, null);
@@ -16,6 +16,10 @@ public class Token {
 
     public static Token newInteger(String text) {
         return new Token(Type.INTEGER, text);
+    }
+
+    public static Token newReal(String text) {
+        return new Token(Type.REAL, text);
     }
 
     public static Token newAtom(String text) {

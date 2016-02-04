@@ -1,6 +1,5 @@
 package cat.udl.eps.butterp.environment;
 
-import cat.udl.eps.butterp.data.EvaluationError;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 
