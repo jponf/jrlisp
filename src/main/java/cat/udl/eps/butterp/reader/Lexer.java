@@ -6,111 +6,114 @@ public abstract class Lexer {
 
     public static final char EOF = (char) -1; // represent end of file char
 
-    private char c;                         // current character
+    private char ch;                         // current character
 
     public abstract void consume();
 
     public void match(char x) {
-        if (c == x) { consume(); }
-        else throw new LexerError(String.format("expecting '%s' but got '%s'%s", x, c, Character.getName(c)));
+        if (ch == x) {
+            consume();
+        } else {
+            throw new LexerError(String.format("expecting '%s' but got '%s'%s", x, ch, Character.getName(ch)));
+        }
     }
 
-    private boolean isALPHA() {
-        return Character.isLetterOrDigit(c);
+    private boolean isAlphaNum() {
+        return Character.isLetterOrDigit(ch);
     }
 
-    private boolean isLETTER() {
-        return Character.isLetter(c);
+    private boolean isLetter() {
+        return Character.isLetter(ch);
     }
 
-    private boolean isSIGN() {
-        return c == '+' || c == '-';
+    private boolean isNumberSign() {
+        return ch == '+' || ch == '-';
     }
 
-    private boolean isNUMBER() {
-        return isSIGN() || isDIGIT();
+    private boolean isNumber() {
+        return isNumberSign() || isDigit();
     }
 
-    private boolean isDIGIT() {
-        return Character.isDigit(c);
+    private boolean isDigit() {
+        return Character.isDigit(ch);
     }
 
-    private boolean isWS() {
-        return Character.isWhitespace(c);
+    private boolean isWhitespace() {
+        return Character.isWhitespace(ch);
     }
 
     public Token nextToken() {
-        while (c != EOF) {
-            if (isWS()) {
-                WS();
-            } else if (c == '(') {
+        while (ch != EOF) {
+            if (isWhitespace()) {
+                skipWhitespace();
+            } else if (ch == '(') {
                 consume();
                 return Token.LPAREN;
-            } else if (c == ')') {
+            } else if (ch == ')') {
                 consume();
                 return Token.RPAREN;
-            } else if (c =='\'') {
+            } else if (ch =='\'') {
                 consume();
-                if (!isWS()) {
+                if (!isWhitespace()) {
                     return Token.QUOTE;
                 } else {
                     throw new LexerError("No spaces allowed after quote character.");
                 }
-            } else if (isLETTER()) {
+            } else if (isLetter()) {
                 return ATOM();
-            } else if (isNUMBER()) {
+            } else if (isNumber()) {
                 return INTEGER();
             } else {
-                throw new LexerError(invalidCharacter(c));
+                throw new LexerError(invalidCharacter(ch));
             }
         }
         return Token.EOF;
     }
 
     protected void setCurrentCharacter(char ch) {
-        this.c = ch;
+        this.ch = ch;
     }
 
     private Token ATOM() {
         StringBuilder buf = new StringBuilder();
 
         do {
-            buf.append(c);
+            buf.append(ch);
             consume();
-        } while (isALPHA());
+        } while (isAlphaNum());
 
-        if (c == EOF || c == ')' || isWS()) {
-            return Token.ATOM(buf.toString());
+        if (ch == EOF || ch == ')' || isWhitespace()) {
+            return Token.newAtom(buf.toString());
         } else {
-            throw new LexerError(invalidCharacter(c));
+            throw new LexerError(invalidCharacter(ch));
         }
     }
 
     private Token INTEGER() {
         StringBuilder buf = new StringBuilder();
 
-        if (isSIGN()) {
-            buf.append(c);
+        if (isNumberSign()) {
+            buf.append(ch);
             consume();
         }
-        if (!isDIGIT()) {
-            throw new LexerError(invalidCharacter(c));
+        if (!isDigit()) {
+            throw new LexerError(invalidCharacter(ch));
         }
 
         do {
-            buf.append(c);
+            buf.append(ch);
             consume();
-        } while (isDIGIT());
+        } while (isDigit());
 
-        if (c == EOF || c == ')' || isWS()) {
-            return Token.INTEGER(buf.toString());
+        if (ch == EOF || ch == ')' || isWhitespace()) {
+            return Token.newInteger(buf.toString());
         } else {
-            throw new LexerError(invalidCharacter(c));
+            throw new LexerError(invalidCharacter(ch));
         }
     }
 
-    private void WS() {
-        while (isWS()) {
+    private void skipWhitespace() {
+        while (isWhitespace()) {
             consume();
         }
     }

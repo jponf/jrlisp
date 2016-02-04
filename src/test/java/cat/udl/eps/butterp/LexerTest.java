@@ -21,11 +21,11 @@ public class LexerTest {
     }
 
     @Test public void one_number() {
-        assertTokens("42", INTEGER("42"));
+        assertTokens("42", newInteger("42"));
     }
 
     @Test public void one_atom() {
-        assertTokens("lala12", ATOM("lala12"));
+        assertTokens("lala12", newAtom("lala12"));
     }
 
     @Test(expected = LexerError.class)
@@ -34,7 +34,7 @@ public class LexerTest {
     }
 
     @Test public void simple_list() {
-        assertTokens("(a 12 b)", LPAREN, ATOM("a"), INTEGER("12"), ATOM("b"), RPAREN);
+        assertTokens("(a 12 b)", LPAREN, newAtom("a"), newInteger("12"), newAtom("b"), RPAREN);
     }
 
     @Test(expected = LexerError.class)
@@ -43,7 +43,7 @@ public class LexerTest {
     }
 
     @Test public void simple_syntax_quote() {
-        assertTokens("'12", QUOTE, INTEGER("12"));
+        assertTokens("'12", QUOTE, newInteger("12"));
     }
 
     @Test(expected = LexerError.class)

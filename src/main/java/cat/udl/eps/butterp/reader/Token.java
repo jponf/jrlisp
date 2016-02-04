@@ -14,11 +14,11 @@ public class Token {
     public static final Token RPAREN = new Token(Type.RPAREN, null);
     public static final Token QUOTE  = new Token(Type.QUOTE, null);
 
-    public static Token INTEGER(String text) {
+    public static Token newInteger(String text) {
         return new Token(Type.INTEGER, text);
     }
 
-    public static Token ATOM(String text) {
+    public static Token newAtom(String text) {
         return new Token(Type.ATOM, text);
     }
 
@@ -42,9 +42,7 @@ public class Token {
 
         Token token = (Token) o;
 
-        if (type != token.type) return false;
-        return !(text != null ? !text.equals(token.text) : token.text != null);
-
+        return (type == token.type) && !(text != null ? !text.equals(token.text) : token.text != null);
     }
 
     @Override
