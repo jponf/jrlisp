@@ -46,16 +46,18 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("sub"), new Function() {
             @Override
-            public SExpression apply(SExpression evargs, Environment env) {
+            public SExpression apply(SExpression evargs, Environment env) { // THIS IS WRONG FIX IT
                 if (Symbol.NIL.equals(evargs))
                     return new Integer(0);
 
                 if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
+                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
                     return nextOperand.subtract((BaseNumber) ListOps.car(evargs));
                 }
 
                 throw new EvaluationError("sub: Invalid argument(s) type");
+            }
+        });
 
 
         env.bindGlobal(new Symbol("mult"), new Function() {

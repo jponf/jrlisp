@@ -278,6 +278,9 @@ public class PrimitivesTest {
     }
 
     @Test
+    public void sub_correct_sign() { assertEvalTo("(sub 2 4)", "-2"); }
+
+    @Test
     public void sub_many_real() {
         assertEvalTo("(sub 1 2.2 3 -4.2)", "-2.0");
     }

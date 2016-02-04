@@ -113,12 +113,12 @@ public abstract class Lexer {
         do {
             if (isFullStop())
                 decimal = true;
-            buf.append(c);
+            buf.append(ch);
             consume();
         } while (isDigit() || (isFullStop() && !decimal));
 
         if (ch == EOF || ch == ')' || isWhitespace()) {
-            return decimal ? Token.Real(buf.toString()) : Token.newInteger(buf.toString());
+            return decimal ? Token.newReal(buf.toString()) : Token.newInteger(buf.toString());
         } else {
             throw new LexerError(invalidCharacter(ch));
         }
