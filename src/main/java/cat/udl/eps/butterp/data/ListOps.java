@@ -50,8 +50,8 @@ public class ListOps {
               (klass.isInstance(ListOps.car(params)) && isListOf(ListOps.cdr(params), klass));
     }
 
-    public static Iterator<SExpression> createIterator(final SExpression sexpr) {
-        return new Iterator<SExpression>() {
+    public static <T> Iterator<T> createIterator(final SExpression sexpr) {
+        return new Iterator<T>() {
             SExpression index = sexpr;
 
             @Override
@@ -60,8 +60,8 @@ public class ListOps {
             }
 
             @Override
-            public SExpression next() {
-                SExpression retVal = ListOps.car(index);
+            public T next() {
+                T retVal = (T)ListOps.car(index);  // Intentionally unchecked cast
                 index = ListOps.cdr(index);
                 return retVal;
             }

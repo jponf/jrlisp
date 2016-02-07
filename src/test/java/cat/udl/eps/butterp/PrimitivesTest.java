@@ -267,6 +267,11 @@ public class PrimitivesTest {
         assertEvalTo("(add 1 2 3.5 4.3)", "10.8");
     }
 
+    @Test(expected = EvaluationError.class)
+    public void add_not_a_number() {
+        assertEvalFails("(add 1 t 2)");
+    }
+
     @Test
     public void sub_no_arg() {
         assertEvalTo("(sub)", "0");
@@ -274,7 +279,7 @@ public class PrimitivesTest {
 
     @Test
     public void sub_many_integers() {
-        assertEvalTo("(sub 1 2 -3 4)", "-4");
+        assertEvalTo("(sub 1 2 -3 4)", "-2");
     }
 
     @Test
@@ -282,12 +287,20 @@ public class PrimitivesTest {
 
     @Test
     public void sub_many_real() {
-        assertEvalTo("(sub 1 2.2 3 -4.2)", "-2.0");
+        assertEvalTo("(sub 1 2.2 3 -4.2)", "0.0");
     }
 
-    @Test(expected = EvaluationError.class)
-    public void add_not_a_number() {
-        assertEvalFails("(add 1 t 2)");
+    @Test
+    public void div_no_arg() { assertEvalTo("(div)", "1"); }
+
+    @Test
+    public void div_many_integers() {
+        assertEvalTo("(div 16 2 -4)", "-2");
+    }
+
+    @Test
+    public void div_many_real() {
+        assertEvalTo("(div 16.0 2.0 4)", "2.0");
     }
 
     @Test(expected = EvaluationError.class)

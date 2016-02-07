@@ -4,6 +4,9 @@ import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
 import cat.udl.eps.butterp.environment.Environment;
 
+import java.util.EventListener;
+import java.util.Iterator;
+
 public class Primitives {
 
     public static void loadPrimitives(Environment env) {
@@ -16,6 +19,7 @@ public class Primitives {
 
     /**
      * Loads all the primitive functions into the given environment
+     *
      * @param env The environment that will hold the newly defined functions.
      */
     private static void loadPrimitiveFunctions(Environment env) {
@@ -36,8 +40,8 @@ public class Primitives {
                     return new Integer(0);
 
                 if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
-                    return nextOperand.add((BaseNumber) ListOps.car(evargs));
+                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
+                    return ((BaseNumber) ListOps.car(evargs)).add(nextOperand);
                 }
 
                 throw new EvaluationError("add: Invalid argument(s) type");
@@ -50,12 +54,17 @@ public class Primitives {
                 if (Symbol.NIL.equals(evargs))
                     return new Integer(0);
 
-                if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
-                    return nextOperand.subtract((BaseNumber) ListOps.car(evargs));
-                }
+                try {
+                    Iterator<BaseNumber> it = ListOps.createIterator(evargs);
+                    BaseNumber result = it.next();
 
-                throw new EvaluationError("sub: Invalid argument(s) type");
+                    while (it.hasNext())
+                        result = result.subtract(it.next());
+
+                    return result;
+                } catch (ClassCastException e) {
+                    throw new EvaluationError("sub: Invalid argument(s) type");
+                }
             }
         });
 
@@ -67,8 +76,8 @@ public class Primitives {
                     return new Integer(1);
 
                 if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber)apply(ListOps.cdr(evargs), env);
-                    return nextOperand.multiply((BaseNumber) ListOps.car(evargs));
+                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
+                    return ((BaseNumber) ListOps.car(evargs)).multiply(nextOperand);
                 }
 
                 throw new EvaluationError("mult: Invalid argument(s) type");
@@ -76,24 +85,26 @@ public class Primitives {
         });
 
         env.bindGlobal(new Symbol("div"), new Function() {
-                    @Override
-                    public SExpression apply(SExpression evargs, Environment env) {
-                        try {
-                            if (Symbol.NIL.equals(evargs))
-                                return new Integer(1);
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {  // THIS IS WRONG FIX IT
+                if (Symbol.NIL.equals(evargs))
+                    return new Integer(1);
 
-                            if (ListOps.car(evargs) instanceof BaseNumber) {
-                                BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
-                                return ((BaseNumber) ListOps.car(evargs)).divide(nextOperand);
-                            }
+                try {
+                    Iterator<BaseNumber> it = ListOps.createIterator(evargs);
+                    BaseNumber result = it.next();
 
-                            throw new EvaluationError("div: Invalid argument(s) type");
-                        } catch(ArithmeticException e) {
-                            throw new EvaluationError("div: Division by zero");
-                        }
-                    }
+                    while (it.hasNext())
+                        result = result.divide(it.next());
+
+                    return result;
+                } catch (ArithmeticException e) {
+                    throw new EvaluationError("div: Trying to divide by zero");
+                } catch (ClassCastException e) {
+                    throw new EvaluationError("div: Invalid argument(s) type");
                 }
-        );
+            }
+        });
     }
 
     /**
@@ -177,7 +188,7 @@ public class Primitives {
                 SExpression fun = ListOps.nth(evargs, 0);
                 SExpression args = ListOps.nth(evargs, 1);
                 if (fun instanceof Function)
-                    return ((Function)fun).apply(args, env);
+                    return ((Function) fun).apply(args, env);
 
                 throw new EvaluationError("apply: first argument is not a function");
             }
@@ -187,6 +198,7 @@ public class Primitives {
 
     /**
      * Loads all the primitive special forms into the given environment
+     *
      * @param env The environment that will hold the newly defined specials.
      */
     private static void loadPrimitiveSpecials(Environment env) {
@@ -200,7 +212,7 @@ public class Primitives {
                 if (!(sym instanceof Symbol))
                     throw new EvaluationError("define: first argument must be a symbol");
 
-                env.bindGlobal((Symbol)sym, expr.eval(env));
+                env.bindGlobal((Symbol) sym, expr.eval(env));
                 return Symbol.NIL;
             }
         });
@@ -244,9 +256,10 @@ public class Primitives {
 
     /**
      * Utility method that checks if the number of arguments is the expected one.
-     * @param symbolName Name of the function/special that is being evaluated.
+     *
+     * @param symbolName   Name of the function/special that is being evaluated.
      * @param expectedArgs Number of expected arguments.
-     * @param args List of function/special arguments.
+     * @param args         List of function/special arguments.
      * @throws EvaluationError If the number of arguments does not match the expected amount.
      */
     private static void checkExactNumberOfArguments(String symbolName, int expectedArgs, SExpression args) {
