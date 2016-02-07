@@ -66,7 +66,7 @@ public abstract class Lexer {
             } else if (isLetter()) {
                 return ATOM();
             } else if (isNumber()) {
-                return INTEGER();
+                return parseIntegerNumber();
             } else {
                 throw new LexerError(invalidCharacter(ch));
             }
@@ -93,32 +93,37 @@ public abstract class Lexer {
         }
     }
 
-    private Token INTEGER() {
+    private Token parseIntegerNumber() {
         StringBuilder buf = new StringBuilder();
-        boolean decimal = false;
 
         if (isNumberSign()) {
             buf.append(ch);
             consume();
         }
-        if (isFullStop()) {
-            decimal = true;
-            buf.append(ch);
-            consume();
-        }
-        if (!isDigit()) {
-            throw new LexerError(invalidCharacter(ch));
-        }
 
-        do {
-            if (isFullStop())
-                decimal = true;
+        while (isDigit() || isFullStop()) {
+            if (isFullStop()) {
+                return continueAsRealNumber(buf);
+            }
             buf.append(ch);
             consume();
-        } while (isDigit() || (isFullStop() && !decimal));
+        }
 
         if (ch == EOF || ch == ')' || isWhitespace()) {
-            return decimal ? Token.newReal(buf.toString()) : Token.newInteger(buf.toString());
+            return Token.newInteger(buf.toString());
+        } else {
+            throw new LexerError(invalidCharacter(ch));
+        }
+    }
+
+    private Token continueAsRealNumber(StringBuilder buf) {
+        do {
+            buf.append(ch);
+            consume();
+        } while (isDigit());
+
+        if (ch == EOF || ch == ')' || isWhitespace()) {
+            return Token.newReal(buf.toString());
         } else {
             throw new LexerError(invalidCharacter(ch));
         }
