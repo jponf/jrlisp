@@ -20,26 +20,14 @@ public final class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        SExpression symValue = this.car.eval(env);
+        SExpression carExpr = this.car.eval(env);
 
-        if (symValue instanceof Function) {
-            return evaluateFunction((Function)symValue, env);
-        } else if (symValue instanceof Special) {
-            return ((Special)symValue).applySpecial(this.cdr, env);
+        if (carExpr instanceof CallableSExpression) {
+            return ((CallableSExpression)carExpr).call(this.cdr, env);
         }
 
         throw new EvaluationError(
-                String.format("Error evaluating %s, which is nor a function nor a special", symValue.toString()));
-    }
-
-    private SExpression evaluateFunction(Function function, Environment env) {
-        List<SExpression> evargs = new ArrayList<>();
-        Iterator<SExpression> it = ListOps.createIterator(this.cdr);
-        while (it.hasNext()) {
-            evargs.add(it.next().eval(env));
-        }
-
-        return function.apply(ListOps.list(evargs), env);
+                String.format("Error evaluating %s, which is not a callable s-expression", carExpr.toString()));
     }
 
     @Override
