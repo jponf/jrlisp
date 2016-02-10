@@ -372,6 +372,14 @@ public class PrimitivesTest {
         assertEvalTo("(factorial 6)", "720");
     }
 
+    @Test
+    public void variable_arguments() {
+        assertEvalTo("(define sum " +
+                "        (lambda (& n)" +
+                "          (add n)))", "nil");
+        assertEvalTo("(sum 1 2 3 4 5)", "15");
+    }
+
     @Test public void syntax_quote() {
         assertEvalTo("(car '((1 2) cons))", "(1 2)");
     }

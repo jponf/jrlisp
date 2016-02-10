@@ -6,6 +6,7 @@ public final class Symbol implements SExpression {
 
     public static final Symbol TRUE = new Symbol("t");
     public static final Symbol NIL = new Symbol("nil");
+    public static final Symbol AND = new Symbol("&");
 
     public final String name; // Si el definiu privat caldrà un getter
 

@@ -11,8 +11,8 @@ public class ListOps {
         return new ConsCell(car, cdr);
     }
 
-    public static SExpression car(SExpression sexpr) {
-        return ((ConsCell)sexpr).car;
+    public static <T extends SExpression> T car(SExpression sexpr) {
+        return (T) ((ConsCell)sexpr).car;  // Intentionally unchecked cast
     }
 
     public static SExpression cdr(SExpression sexpr) {

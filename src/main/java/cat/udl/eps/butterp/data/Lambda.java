@@ -27,20 +27,24 @@ public class Lambda extends Function {
     public SExpression apply(SExpression evargs, Environment callingEnv) {
         Environment localEnvironment = definitionEnv.extend();
 
-        Iterator<SExpression> argsIt = ListOps.createIterator(evargs);
-        Iterator<SExpression> paramsIt = ListOps.createIterator(params);
+        /*Iterator<SExpression> argsIt = ListOps.createIterator(evargs);
+        Iterator<Symbol> paramsIt = ListOps.createIterator(params);
         while (argsIt.hasNext() && paramsIt.hasNext()) {
-            localEnvironment.bind((Symbol)paramsIt.next(), argsIt.next());
+            localEnvironment.bind(paramsIt.next(), argsIt.next());
         }
 
         if (argsIt.hasNext() || paramsIt.hasNext())
-            throw new EvaluationError(String.format("%s: not enought arguments provided", toString()));
-
+            throw new EvaluationError(String.format("%s: not enought arguments provided", toString()));*/
+        processParams(localEnvironment, params, evargs);
         return body.eval(localEnvironment);
     }
 
     @Override
     public String toString() {
         return String.format("<lambda-function-%x | parameters: %s>", hashCode(), params.toString());
+    }
+
+    private void processParams(Environment localEnv, SExpression params, SExpression args) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
