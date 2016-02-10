@@ -37,6 +37,41 @@ public class LexerTest {
         assertTokens("(a 12 b)", LPAREN, newAtom("a"), newInteger("12"), newAtom("b"), RPAREN);
     }
 
+    @Test
+    public void operand_plus() {
+        assertTokens("+", newAtom("+"));
+    }
+
+    @Test
+    public void operand_minus() {
+        assertTokens("-", newAtom("-"));
+    }
+
+    @Test
+    public void operand_mult() {
+        assertTokens("*", newAtom("*"));
+    }
+
+    @Test
+    public void operand_div() {
+        assertTokens("/", newAtom("/"));
+    }
+
+    @Test
+    public void operand_ampersand() {
+        assertTokens("&", newAtom("&"));
+    }
+
+    @Test
+    public void atom_starting_with_operand() {
+        assertTokens("*hi", newAtom("*hi"));
+    }
+
+    @Test(expected = LexerError.class)
+    public void atom_with_operand_in_between() {
+        assertTokens("h*i", newAtom(""));
+    }
+
     @Test(expected = LexerError.class)
     public void bad_number() {
         assertTokens("12a");

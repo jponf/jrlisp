@@ -81,6 +81,11 @@ public abstract class Lexer {
     }
 
     private Token parseAtom(StringBuilder buf) {
+        if (isOperand()) {    // Operands are only allowed at the beginning
+            buf.append(ch);
+            consume();
+        }
+
         while (isAlphaNum()) {
             buf.append(ch);
             consume();
