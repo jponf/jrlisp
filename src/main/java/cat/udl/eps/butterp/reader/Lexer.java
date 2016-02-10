@@ -26,12 +26,12 @@ public abstract class Lexer {
         return Character.isLetter(ch);
     }
 
-    private boolean isNumberSign() {
-        return ch == '+' || ch == '-';
+    private boolean isOperand() {
+        return ch == '*' || ch == '/' || ch == '&' || isNumberSign();
     }
 
-    private boolean isNumber() {
-        return isNumberSign() || isDigit();
+    private boolean isNumberSign() {
+        return ch == '+' || ch == '-';
     }
 
     private boolean isDigit() {
@@ -63,10 +63,12 @@ public abstract class Lexer {
                 } else {
                     throw new LexerError("No spaces allowed after quote character.");
                 }
-            } else if (isLetter()) {
-                return ATOM();
-            } else if (isNumber()) {
-                return parseIntegerNumber();
+            } else if (isNumberSign()) {   // An operand is a number sign so the order is important
+                return parseAtomOrNumber(new StringBuilder());
+            } else if (isLetter() || isOperand()) {
+                return parseAtom(new StringBuilder());
+            } else if (isDigit()) {
+                return parseNumber(new StringBuilder());
             } else {
                 throw new LexerError(invalidCharacter(ch));
             }
@@ -78,13 +80,11 @@ public abstract class Lexer {
         this.ch = ch;
     }
 
-    private Token ATOM() {
-        StringBuilder buf = new StringBuilder();
-
-        do {
+    private Token parseAtom(StringBuilder buf) {
+        while (isAlphaNum()) {
             buf.append(ch);
             consume();
-        } while (isAlphaNum());
+        }
 
         if (ch == EOF || ch == ')' || isWhitespace()) {
             return Token.newAtom(buf.toString());
@@ -93,37 +93,30 @@ public abstract class Lexer {
         }
     }
 
-    private Token parseIntegerNumber() {
-        StringBuilder buf = new StringBuilder();
-
+    private Token parseAtomOrNumber(StringBuilder buf) {
         if (isNumberSign()) {
             buf.append(ch);
             consume();
         }
 
-        while (isDigit() || isFullStop()) {
-            if (isFullStop()) {
-                return continueAsRealNumber(buf);
-            }
-            buf.append(ch);
-            consume();
-        }
-
-        if (ch == EOF || ch == ')' || isWhitespace()) {
-            return Token.newInteger(buf.toString());
+        if (isDigit()) {
+            return parseNumber(buf);
         } else {
-            throw new LexerError(invalidCharacter(ch));
+            return parseAtom(buf);
         }
     }
 
-    private Token continueAsRealNumber(StringBuilder buf) {
-        do {
+    private Token parseNumber(StringBuilder buf) {  // Sign is handled in parseAtomOrNumber
+        boolean decimalPoint = false;
+        while (isDigit() || (isFullStop() && !decimalPoint)) {
+            if (isFullStop())
+                decimalPoint = true;
             buf.append(ch);
             consume();
-        } while (isDigit());
+        }
 
         if (ch == EOF || ch == ')' || isWhitespace()) {
-            return Token.newReal(buf.toString());
+            return decimalPoint ? Token.newReal(buf.toString()) : Token.newInteger(buf.toString());
         } else {
             throw new LexerError(invalidCharacter(ch));
         }
