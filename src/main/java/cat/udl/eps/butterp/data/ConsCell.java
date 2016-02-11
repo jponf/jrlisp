@@ -1,10 +1,9 @@
 package cat.udl.eps.butterp.data;
 
+import cat.udl.eps.butterp.data.callable.CallableSExpression;
 import cat.udl.eps.butterp.environment.Environment;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public final class ConsCell implements SExpression {
 
@@ -20,14 +19,13 @@ public final class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        SExpression carExpr = this.car.eval(env);
-
-        if (carExpr instanceof CallableSExpression) {
-            return ((CallableSExpression)carExpr).call(this.cdr, env);
+        try {
+            CallableSExpression carExpr = (CallableSExpression)this.car.eval(env);
+            return carExpr.apply(carExpr.getEvaluationStrategy().evaluateArguments(cdr, env), env);
+        } catch (ClassCastException e) {
+            throw new EvaluationError(
+                    String.format("Error evaluating %s, which is not a callable s-expression", car.toString()));
         }
-
-        throw new EvaluationError(
-                String.format("Error evaluating %s, which is not a callable s-expression", carExpr.toString()));
     }
 
     @Override

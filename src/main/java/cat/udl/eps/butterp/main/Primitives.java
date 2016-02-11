@@ -2,9 +2,11 @@ package cat.udl.eps.butterp.main;
 
 import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.callable.Function;
+import cat.udl.eps.butterp.data.callable.Lambda;
+import cat.udl.eps.butterp.data.callable.Special;
 import cat.udl.eps.butterp.environment.Environment;
 
-import java.util.EventListener;
 import java.util.Iterator;
 
 public class Primitives {
@@ -204,7 +206,7 @@ public class Primitives {
     private static void loadPrimitiveSpecials(Environment env) {
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
+            public SExpression apply(SExpression args, Environment env) {
                 checkExactNumberOfArguments("define", 2, args);
 
                 SExpression sym = ListOps.nth(args, 0);
@@ -219,7 +221,7 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("if"), new Special() {
             @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
+            public SExpression apply(SExpression args, Environment env) {
                 checkExactNumberOfArguments("if", 3, args);
 
                 if (Symbol.NIL.equals(ListOps.nth(args, 0).eval(env)))  // evaluate condition
@@ -230,7 +232,7 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("lambda"), new Special() {
             @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
+            public SExpression apply(SExpression args, Environment env) {
                 checkExactNumberOfArguments("lambda", 2, args);
 
                 SExpression params = ListOps.nth(args, 0);
@@ -245,7 +247,7 @@ public class Primitives {
 
         env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
+            public SExpression apply(SExpression args, Environment env) {
                 checkExactNumberOfArguments("quote", 1, args);
                 return ListOps.car(args);
             }

@@ -1,5 +1,10 @@
-package cat.udl.eps.butterp.data;
+package cat.udl.eps.butterp.data.callable;
 
+import cat.udl.eps.butterp.data.EvaluationError;
+import cat.udl.eps.butterp.data.ListOps;
+import cat.udl.eps.butterp.data.SExpression;
+import cat.udl.eps.butterp.data.Symbol;
+import cat.udl.eps.butterp.data.callable.Function;
 import cat.udl.eps.butterp.environment.Environment;
 
 import java.util.Iterator;
@@ -39,26 +44,27 @@ public class Lambda extends Function {
     }
 
     private void checkParameters() {
-        boolean variadic = false;
-
-        Iterator<Symbol> it = ListOps.createIterator(params);
-        while (it.hasNext() && !variadic) {
-            if (Symbol.AND.equals(it.next())) {
-                variadic = true;
-                if (!it.hasNext()) {
-                    throw new EvaluationError(String.format("%s: expected parameter name after &", toString()));
+        try {
+            boolean variadic = false;
+            Iterator<Symbol> it = ListOps.createIterator(params);
+            while (it.hasNext() && !variadic) {
+                if (Symbol.AND.equals(it.next())) {
+                    variadic = true;
+                    if (!it.hasNext())
+                        throw new EvaluationError(String.format("%s: expected parameter name after &", toString()));
                 }
             }
-        }
 
-        if (variadic) {
-            if (Symbol.AND.equals(it.next())) {
-                throw new EvaluationError(String.format("%s: %s cannot be used as the variadic parameter name",
-                        toString(), Symbol.AND.toString()));
+            if (variadic) {
+                if (Symbol.AND.equals(it.next())) {
+                    throw new EvaluationError(String.format("%s: %s cannot be used as the variadic parameter name",
+                            toString(), Symbol.AND.toString()));
+                }
+                if (it.hasNext())
+                    throw new EvaluationError(String.format("%s: variadic parameter must be the last one", toString()));
             }
-            if (it.hasNext()) {
-                throw new EvaluationError(String.format("%s: variadic parameter must be the last one", toString()));
-            }
+        } catch (ClassCastException e) {
+            throw new EvaluationError(String.format("%s: lambda parameters must be symbols", toString()));
         }
     }
 
