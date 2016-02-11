@@ -355,6 +355,28 @@ public class PrimitivesTest {
         assertEvalTo("(factorial 6)", "720");
     }
 
+    @Test(expected = EvaluationError.class)
+    public void define_factorial_too_few_parameters() {
+        assertEvalTo("(define factorial " +
+                "       (lambda (n)" +
+                "         (if (eq n 0) " +
+                "             1 " +
+                "             (mult n " +
+                "                   (factorial (add n -1))))))", "nil");
+        assertEvalTo("(factorial)", "nil");
+    }
+
+    @Test(expected = EvaluationError.class)
+    public void define_factorial_too_many_parameters() {
+        assertEvalTo("(define factorial " +
+                "       (lambda (n)" +
+                "         (if (eq n 0) " +
+                "             1 " +
+                "             (mult n " +
+                "                   (factorial (add n -1))))))", "nil");
+        assertEvalTo("(factorial 1 2 3)", "nil");
+    }
+
     @Test public void define_y_combinator() {
         assertEvalTo("(define y" +
                 "       (lambda (x)" +
