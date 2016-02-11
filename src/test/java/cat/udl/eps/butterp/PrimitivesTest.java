@@ -426,6 +426,27 @@ public class PrimitivesTest {
         assertEvalTo("(sum)", "0");
     }
 
+    @Test (expected = EvaluationError.class)
+    public void variable_arguments_no_paramname() {
+        assertEvalTo("(define sum " +
+                "        (lambda (a &)" +
+                "          (add a (apply add n)))))", "nil");
+    }
+
+    @Test (expected = EvaluationError.class)
+    public void variable_arguments_overriding_variadic_operator() {
+        assertEvalTo("(define sum " +
+                "        (lambda (a & &)" +
+                "          (add a (apply add n)))))", "nil");
+    }
+
+    @Test (expected = EvaluationError.class)
+    public void variable_arguments_multiple_variading_definitions() {
+        assertEvalTo("(define sum " +
+                "        (lambda (a & n & c)" +
+                "          (add a (apply add n)))))", "nil");
+    }
+
     @Test public void syntax_quote() {
         assertEvalTo("(car '((1 2) cons))", "(1 2)");
     }

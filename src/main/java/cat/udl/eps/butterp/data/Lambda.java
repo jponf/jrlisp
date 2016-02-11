@@ -21,20 +21,14 @@ public class Lambda extends Function {
         this.params = params;
         this.body = body;
         this.definitionEnv = definitionEnv;
+
+        checkParameters();
     }
 
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
         Environment localEnvironment = definitionEnv.extend();
 
-        /*Iterator<SExpression> argsIt = ListOps.createIterator(evargs);
-        Iterator<Symbol> paramsIt = ListOps.createIterator(params);
-        while (argsIt.hasNext() && paramsIt.hasNext()) {
-            localEnvironment.bind(paramsIt.next(), argsIt.next());
-        }
-
-        if (argsIt.hasNext() || paramsIt.hasNext())
-            throw new EvaluationError(String.format("%s: not enought arguments provided", toString()));*/
         processParams(localEnvironment, params, evargs);
         return body.eval(localEnvironment);
     }
@@ -42,6 +36,30 @@ public class Lambda extends Function {
     @Override
     public String toString() {
         return String.format("<lambda-function-%x | parameters: %s>", hashCode(), params.toString());
+    }
+
+    private void checkParameters() {
+        boolean variadic = false;
+
+        Iterator<Symbol> it = ListOps.createIterator(params);
+        while (it.hasNext() && !variadic) {
+            if (Symbol.AND.equals(it.next())) {
+                variadic = true;
+                if (!it.hasNext()) {
+                    throw new EvaluationError(String.format("%s: expected parameter name after &", toString()));
+                }
+            }
+        }
+
+        if (variadic) {
+            if (Symbol.AND.equals(it.next())) {
+                throw new EvaluationError(String.format("%s: %s cannot be used as the variadic parameter name",
+                        toString(), Symbol.AND.toString()));
+            }
+            if (it.hasNext()) {
+                throw new EvaluationError(String.format("%s: variadic parameter must be the last one", toString()));
+            }
+        }
     }
 
     private void processParams(Environment localEnv, SExpression params, SExpression args) {
