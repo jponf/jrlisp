@@ -376,8 +376,16 @@ public class PrimitivesTest {
     public void variable_arguments() {
         assertEvalTo("(define sum " +
                 "        (lambda (& n)" +
-                "          (add n)))", "nil");
+                "          (apply add n))))", "nil");
         assertEvalTo("(sum 1 2 3 4 5)", "15");
+    }
+
+    @Test
+    public void variable_arguments_empty() {
+        assertEvalTo("(define sum " +
+                "        (lambda (& n)" +
+                "          (apply add n))))", "nil");
+        assertEvalTo("(sum)", "0");
     }
 
     @Test public void syntax_quote() {

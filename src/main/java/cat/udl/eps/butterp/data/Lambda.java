@@ -45,6 +45,18 @@ public class Lambda extends Function {
     }
 
     private void processParams(Environment localEnv, SExpression params, SExpression args) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (!Symbol.NIL.equals(params)) {
+            Symbol p = ListOps.car(params);
+            if (Symbol.AND.equals(p)) {
+                processParams(localEnv, ListOps.cdr(params), ListOps.cons(args, Symbol.NIL));
+            } else if (Symbol.NIL.equals(args)) {
+                throw new EvaluationError(String.format("%s: incorrect number of arguments", toString()));
+            } else {
+                localEnv.bind(p, ListOps.car(args));
+                processParams(localEnv, ListOps.cdr(params), ListOps.cdr(args));
+            }
+        } else if (!Symbol.NIL.equals(args)) {
+            throw new EvaluationError(String.format("%s: incorrect number of arguments", toString()));
+        }
     }
 }
