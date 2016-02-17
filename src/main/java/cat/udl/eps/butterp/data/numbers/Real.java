@@ -1,7 +1,10 @@
-package cat.udl.eps.butterp.data;
+package cat.udl.eps.butterp.data.numbers;
 
 
+import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.environment.Environment;
+
+import java.lang.*;
 
 public final class Real implements BaseNumber {
 

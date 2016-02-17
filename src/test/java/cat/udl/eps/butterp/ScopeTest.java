@@ -1,7 +1,7 @@
 package cat.udl.eps.butterp;
 
 import cat.udl.eps.butterp.data.EvaluationError;
-import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.numbers.Integer;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 import cat.udl.eps.butterp.environment.Environment;

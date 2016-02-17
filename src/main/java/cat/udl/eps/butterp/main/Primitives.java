@@ -1,7 +1,8 @@
 package cat.udl.eps.butterp.main;
 
 import cat.udl.eps.butterp.data.*;
-import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.numbers.BaseNumber;
+import cat.udl.eps.butterp.data.numbers.Integer;
 import cat.udl.eps.butterp.data.callable.Function;
 import cat.udl.eps.butterp.data.callable.Lambda;
 import cat.udl.eps.butterp.data.callable.Special;
@@ -196,7 +197,6 @@ public class Primitives {
             }
         });
     }
-
 
     /**
      * Loads all the primitive special forms into the given environment

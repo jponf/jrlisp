@@ -1,10 +1,11 @@
-package cat.udl.eps.butterp.data;
+package cat.udl.eps.butterp.data.numbers;
 
+import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.environment.Environment;
 
 public final class Integer implements BaseNumber {
 
-    public final int value;  // Si el definiu privat caldrà un getter
+    public final int value;
 
     public Integer(int value) {
         this.value = value;

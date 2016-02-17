@@ -1,5 +1,7 @@
-package cat.udl.eps.butterp.data;
+package cat.udl.eps.butterp.data.numbers;
 
+
+import cat.udl.eps.butterp.data.SExpression;
 
 public interface BaseNumber extends SExpression {
 

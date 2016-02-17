@@ -1,7 +1,8 @@
 package cat.udl.eps.butterp;
 
 import cat.udl.eps.butterp.data.*;
-import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.numbers.Integer;
+import cat.udl.eps.butterp.data.numbers.Real;
 import cat.udl.eps.butterp.reader.Parser;
 import org.junit.Test;
 

@@ -1,7 +1,8 @@
 package cat.udl.eps.butterp.reader;
 
 import cat.udl.eps.butterp.data.*;
-import cat.udl.eps.butterp.data.Integer;
+import cat.udl.eps.butterp.data.numbers.Integer;
+import cat.udl.eps.butterp.data.numbers.Real;
 
 import java.util.ArrayList;
 import java.util.List;
