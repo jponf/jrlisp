@@ -141,10 +141,10 @@ public class Primitives {
             public SExpression apply(SExpression evargs, Environment env) {
                 checkExactNumberOfArguments("cons", 2, evargs);
 
-                SExpression firstArg = ListOps.nth(evargs, 0);
-                SExpression secondArg = ListOps.nth(evargs, 1);
-                if (Symbol.NIL.equals(secondArg) || secondArg instanceof ConsCell)
-                    return new ConsCell(firstArg, secondArg);
+                SExpression car = ListOps.nth(evargs, 0);
+                SExpression cdr = ListOps.nth(evargs, 1);
+                if (Symbol.NIL.equals(cdr) || cdr instanceof ConsCell)
+                    return new ConsCell(car, cdr);
 
                 throw new EvaluationError("cons: the second argument must be either nil or a list");
             }
@@ -210,11 +210,10 @@ public class Primitives {
                 checkExactNumberOfArguments("define", 2, args);
 
                 SExpression sym = ListOps.nth(args, 0);
-                SExpression expr = ListOps.nth(args, 1);
                 if (!(sym instanceof Symbol))
                     throw new EvaluationError("define: first argument must be a symbol");
 
-                env.bindGlobal((Symbol) sym, expr.eval(env));
+                env.bindGlobal((Symbol) sym, ListOps.nth(args, 1).eval(env));
                 return Symbol.NIL;
             }
         });
@@ -236,11 +235,12 @@ public class Primitives {
                 checkExactNumberOfArguments("lambda", 2, args);
 
                 SExpression params = ListOps.nth(args, 0);
-                SExpression body = ListOps.nth(args, 1);
-
                 if (!ListOps.isListOf(params, Symbol.class))
                     throw new EvaluationError("lambda: the first argument must be a list of symbols");
+                if (!ListOps.allDiferent(params))
+                    throw new EvaluationError("lambda: params should be all different");
 
+                SExpression body = ListOps.nth(args, 1);
                 return new Lambda(params, body, env);
             }
         });

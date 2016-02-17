@@ -1,9 +1,6 @@
 package cat.udl.eps.butterp.data;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class ListOps {
 
@@ -41,13 +38,23 @@ public class ListOps {
         return 1 + length(cdr(sexpr));
     }
 
-    public static SExpression nth(SExpression sexpr, int n) {
-        return n <= 0 ? ListOps.car(sexpr) : nth(ListOps.cdr(sexpr), n - 1);
+    public static SExpression nth(SExpression list, int n) {
+        return n <= 0 ? ListOps.car(list) : nth(ListOps.cdr(list), n - 1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
         return Symbol.NIL.equals(params) ||
               (klass.isInstance(ListOps.car(params)) && isListOf(ListOps.cdr(params), klass));
+    }
+
+    public static boolean allDiferent(SExpression list) {
+        Set<SExpression> seen = new HashSet<>();
+        Iterator<SExpression> it = createIterator(list);
+        while (it.hasNext()) {
+            if (!seen.add(it.next()))
+                return false;
+        }
+        return true;
     }
 
     public static <T> Iterator<T> createIterator(final SExpression sexpr) {
@@ -56,12 +63,12 @@ public class ListOps {
 
             @Override
             public boolean hasNext() {
-                return !Symbol.NIL.equals(index);
+                return Symbol.NIL != index;
             }
 
             @Override
             public T next() {
-                T retVal = (T)ListOps.car(index);  // Intentionally unchecked cast
+                T retVal = ListOps.car(index);  // Intentionally unchecked cast
                 index = ListOps.cdr(index);
                 return retVal;
             }
