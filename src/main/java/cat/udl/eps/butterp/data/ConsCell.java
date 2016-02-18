@@ -24,7 +24,8 @@ public final class ConsCell implements SExpression {
             return carExpr.apply(carExpr.getEvaluationStrategy().evaluateArguments(cdr, env), env);
         } catch (ClassCastException e) {
             throw new EvaluationError(
-                    String.format("Error evaluating %s, which is not a callable s-expression", car.toString()));
+                    String.format("Error evaluating %s, which is not a callable s-expression",
+                            car.toString()));
         }
     }
 
@@ -45,11 +46,8 @@ public final class ConsCell implements SExpression {
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(this.car.toString());
-
-        Iterator<SExpression> it = ListOps.createIterator(cdr);
-        while (it.hasNext()) {
-            buffer.append(" ").append(it.next());
-        }
+        for (SExpression sexpr : ListOps.iterate(cdr))
+            buffer.append(' ').append(sexpr);
 
         return String.format("(%s)", buffer.toString());
     }

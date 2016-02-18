@@ -49,17 +49,25 @@ public class ListOps {
 
     public static boolean allDiferent(SExpression list) {
         Set<SExpression> seen = new HashSet<>();
-        Iterator<SExpression> it = createIterator(list);
-        while (it.hasNext()) {
-            if (!seen.add(it.next()))
+        for (SExpression sexpr : iterate(list)) {
+            if (!seen.add(sexpr))
                 return false;
         }
         return true;
     }
 
-    public static <T> Iterator<T> createIterator(final SExpression sexpr) {
+    public static <T extends SExpression> Iterable<T> iterate(final SExpression list) {
+        return new Iterable<T>() {
+            @Override
+            public Iterator<T> iterator() {
+                return createIterator(list);
+            }
+        };
+    }
+
+    public static <T extends SExpression> Iterator<T> createIterator(final SExpression list) {
         return new Iterator<T>() {
-            SExpression index = sexpr;
+            SExpression index = list;
 
             @Override
             public boolean hasNext() {

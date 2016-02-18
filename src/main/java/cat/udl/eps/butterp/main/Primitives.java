@@ -39,15 +39,15 @@ public class Primitives {
         env.bindGlobal(new Symbol("add"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                if (Symbol.NIL.equals(evargs))
-                    return new Integer(0);
+                try {
+                    BaseNumber result = new Integer(0);
+                    for (BaseNumber num : ListOps.<BaseNumber>iterate(evargs))
+                        result = result.add(num);
 
-                if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
-                    return ((BaseNumber) ListOps.car(evargs)).add(nextOperand);
+                    return result;
+                } catch (ClassCastException e) {
+                    throw new EvaluationError("add: Invalid argument(s) type");
                 }
-
-                throw new EvaluationError("add: Invalid argument(s) type");
             }
         });
 
@@ -60,7 +60,6 @@ public class Primitives {
                 try {
                     Iterator<BaseNumber> it = ListOps.createIterator(evargs);
                     BaseNumber result = it.next();
-
                     while (it.hasNext())
                         result = result.subtract(it.next());
 
@@ -75,15 +74,15 @@ public class Primitives {
         env.bindGlobal(new Symbol("mult"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                if (Symbol.NIL.equals(evargs))
-                    return new Integer(1);
+                try {
+                    BaseNumber result = new Integer(1);
+                    for (BaseNumber num : ListOps.<BaseNumber>iterate(evargs))
+                        result = result.multiply(num);
 
-                if (ListOps.car(evargs) instanceof BaseNumber) {
-                    BaseNumber nextOperand = (BaseNumber) apply(ListOps.cdr(evargs), env);
-                    return ((BaseNumber) ListOps.car(evargs)).multiply(nextOperand);
+                    return result;
+                } catch (ClassCastException e) {
+                    throw new EvaluationError("add: Invalid argument(s) type");
                 }
-
-                throw new EvaluationError("mult: Invalid argument(s) type");
             }
         });
 
@@ -96,7 +95,6 @@ public class Primitives {
                 try {
                     Iterator<BaseNumber> it = ListOps.createIterator(evargs);
                     BaseNumber result = it.next();
-
                     while (it.hasNext())
                         result = result.divide(it.next());
 
