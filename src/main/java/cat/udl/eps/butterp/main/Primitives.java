@@ -235,7 +235,7 @@ public class Primitives {
                 SExpression params = ListOps.nth(args, 0);
                 if (!ListOps.isListOf(params, Symbol.class))
                     throw new EvaluationError("lambda: the first argument must be a list of symbols");
-                if (!ListOps.allDiferent(params))
+                if (!ListOps.allDifferent(params))
                     throw new EvaluationError("lambda: params should be all different");
 
                 SExpression body = ListOps.nth(args, 1);

@@ -31,11 +31,12 @@ public class ListOps {
         return head;
     }
 
-    public static int length(SExpression sexpr) {
-        if (Symbol.NIL.equals(sexpr))
-            return 0;
+    public static int length(SExpression list) {
+        int length = 0;
+        for (SExpression sexpr : iterate(list))
+            length += 1;
 
-        return 1 + length(cdr(sexpr));
+        return length;
     }
 
     public static SExpression nth(SExpression list, int n) {
@@ -47,7 +48,7 @@ public class ListOps {
               (klass.isInstance(ListOps.car(params)) && isListOf(ListOps.cdr(params), klass));
     }
 
-    public static boolean allDiferent(SExpression list) {
+    public static boolean allDifferent(SExpression list) {
         Set<SExpression> seen = new HashSet<>();
         for (SExpression sexpr : iterate(list)) {
             if (!seen.add(sexpr))
