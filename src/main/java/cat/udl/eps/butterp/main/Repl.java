@@ -10,11 +10,13 @@ import cat.udl.eps.butterp.reader.ParserError;
 import cat.udl.eps.butterp.reader.StringLexer;
 
 import java.io.BufferedInputStream;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Repl {
 
     public static final String PROMPT = "butterp";
+    public static final String EXIT_CMD = ":exit";
 
     public static Environment createInitialEnvironment() {
         Environment env = new NestedMap();
@@ -25,18 +27,28 @@ public class Repl {
     public static String readInput() {
         Scanner scanner = new Scanner(new BufferedInputStream(System.in));
         StringBuilder builder = new StringBuilder();
-        String line;
         boolean first = true;
+
+        String line = "";
         int parenthesesBalance = 0;
-        do {
-            String prompt = String.format("%s%s ", PROMPT, first? ">" : "#");
-            System.out.print(prompt);
-            line = scanner.nextLine();
-            builder.append(String.format("%s%n", line));
-            first = false;
-            parenthesesBalance += parenthesesBalance(line);
-        } while (!line.isEmpty() && parenthesesBalance != 0);
-        return builder.toString();
+
+        try {
+            do {
+                String prompt = String.format("%s%s ", PROMPT,
+                        first ? ">" : "#");
+                System.out.print(prompt);
+                first = false;
+
+                line = scanner.nextLine();
+                builder.append(String.format("%s%n", line));
+                parenthesesBalance += parenthesesBalance(line);
+            } while (!line.isEmpty() && parenthesesBalance != 0);
+
+            return builder.toString().trim();
+
+        } catch (NoSuchElementException ex) {
+            return EXIT_CMD;
+        }
     }
 
     private static int parenthesesBalance(String line) {
@@ -64,7 +76,8 @@ public class Repl {
         showBanner();
         while (true) {
             String input = readInput();
-            if (":exit\n".equals(input)) break;
+            if (EXIT_CMD.equals(input)) break;
+
             try {
                 Parser parser = new Parser(new StringLexer(input));
                 SExpression sexpr = parser.sexpr();
