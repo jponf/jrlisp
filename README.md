@@ -14,7 +14,7 @@ directory and type:
 
 #REPL Execution
 
-Once the project has been compile to run the REPL type:
+Once the project has been compiled, to run the REPL type:
 
 `$ java -cp target/classes/ cat.udl.eps.butterp.main.Repl`
 
